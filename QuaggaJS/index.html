@@ -73,19 +73,24 @@ function manageNoise(){
 </script>
 <script type="text/javascript">
 
+    var quaggaProtocol = "com.github.quagga";
+    var activityName = "WhiteNoise";
+    var protocols = [quaggaProtocol];
+    var opt_activityContext = "";
+    var opt_pingIntervalSec = 5;
+
 	var receiver = new cast.receiver.Receiver(
-	    'WhiteNoise', ['com.github.quagga'],
-	    "",
-	    5);
+        activityName,
+        protocols,
+        opt_activityContext,
+        opt_pingIntervalSec
+    );
 	var remoteMedia = new cast.receiver.RemoteMedia();
 	remoteMedia.addChannelFactory(
-	    receiver.createChannelFactory('com.github.quagga'));
-
+	    receiver.createChannelFactory(quaggaProtocol));
 	receiver.start();
-
 	window.addEventListener('load', function() {
-	
-	init()
+	   init();
 	});
 </script>
 
