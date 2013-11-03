@@ -1,4 +1,5 @@
 <html>
+	<title>WhiteNoise for ChromeCast</title>
   <head>
     <style>
       body {
@@ -9,7 +10,7 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
   </head>
-<script src="https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js">
+<script src="cast_receiver.js">
 </script>
 <script>
 var viewbmd,
@@ -73,12 +74,12 @@ function manageNoise(){
 <script type="text/javascript">
 
 	var receiver = new cast.receiver.Receiver(
-	    'App ID', [cast.receiver.RemoteMedia.NAMESPACE],
+	    'WhiteNoise', ['com.github.quagga'],
 	    "",
 	    5);
 	var remoteMedia = new cast.receiver.RemoteMedia();
 	remoteMedia.addChannelFactory(
-	    receiver.createChannelFactory(cast.receiver.RemoteMedia.NAMESPACE));
+	    receiver.createChannelFactory('com.github.quagga'));
 
 	receiver.start();
 
@@ -86,11 +87,10 @@ function manageNoise(){
 	
 	init()
 	});
-
 </script>
 
 <body >
-	<canvas id="myCanvas" width="1064%" height="800"></canvas>
+	<canvas id="myCanvas" width="1280" height="720"></canvas>
 </body>
 
 </html>
