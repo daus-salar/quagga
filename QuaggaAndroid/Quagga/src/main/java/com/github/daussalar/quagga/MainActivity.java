@@ -21,20 +21,21 @@ import com.google.cast.ApplicationSession;
 import com.google.cast.CastContext;
 import com.google.cast.CastDevice;
 import com.google.cast.ContentMetadata;
-import com.google.cast.MediaProtocolCommand;
-import com.google.cast.MediaProtocolMessageStream;
 import com.google.cast.MediaRouteAdapter;
 import com.google.cast.MediaRouteHelper;
 import com.google.cast.MediaRouteStateChangeListener;
+import com.google.cast.MessageStream;
 import com.google.cast.SessionError;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity {
 
-    private static final String APPLICATION_NAME = "";
-    private static final String CONTENT_URL = "";
-    private static final String CONTENT_TITLE = "";
+    private static final String APPLICATION_NAME = "WhiteNoise";
+    private static final String CONTENT_TITLE = "WhiteNoise";
+    private static final String NAMESPACE = "com.github.quagga";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +82,7 @@ public class MainActivity extends ActionBarActivity {
         private MyMediaRouterCallback mMediaRouterCallback;
         private CastDevice mSelectedDevice;
         private MediaRouteStateChangeListener mRouteStateListener;
-        private MediaProtocolMessageStream mMessageStream;
+        private CustomMessageStream mMessageStream;
         private ContentMetadata mMetaData;
         private ApplicationSession mSession;
 
@@ -159,7 +160,6 @@ public class MainActivity extends ActionBarActivity {
             mSelectedDevice = castDevice;
             mRouteStateListener = mediaRouteStateChangeListener;
             openSession();
-
         }
 
         private void openSession() {
@@ -173,11 +173,9 @@ public class MainActivity extends ActionBarActivity {
                         ToastHelper.showLongToast(getActivity(), "Channel is null");
                         return;
                     }
-                    mMessageStream = new MediaProtocolMessageStream();
+                    mMessageStream = new CustomMessageStream();
                     channel.attachMessageStream(mMessageStream);
-                    if (mMessageStream.getPlayerState() == null) {
-                        loadMedia();
-                    }
+//                    loadMedia();
                 }
 
                 @Override public void onSessionStartFailed(SessionError sessionError) {
@@ -213,28 +211,23 @@ public class MainActivity extends ActionBarActivity {
 
         }
 
-        private void loadMedia() {
-            try {
-                MediaProtocolCommand command = mMessageStream.loadMedia(CONTENT_URL, mMetaData);
-                command.setListener(new MediaProtocolCommand.Listener() {
-                    @Override public void onCompleted(MediaProtocolCommand mediaProtocolCommand) {
-                        ToastHelper.showLongToast(getActivity(), "onCompleted");
-                    }
-
-                    @Override public void onCancelled(MediaProtocolCommand mediaProtocolCommand) {
-                        ToastHelper.showLongToast(getActivity(), "onCancelled");
-                    }
-                });
-            } catch (IOException e) {
-                ToastHelper.showLongToast(getActivity(), e.getMessage());
-            }
-        }
-
     }
 
     public static class ToastHelper {
         public static void showLongToast(Context context, String message) {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private static class CustomMessageStream extends MessageStream {
+
+
+        protected CustomMessageStream() throws IllegalArgumentException {
+            super(NAMESPACE);
+        }
+
+        @Override public void onMessageReceived(JSONObject jsonObject) {
+
         }
     }
 
