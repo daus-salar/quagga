@@ -1,6 +1,7 @@
 package com.github.daussalar.quagga;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -13,12 +14,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.cast.ApplicationMetadata;
+import com.google.cast.ApplicationSession;
 import com.google.cast.CastContext;
 import com.google.cast.CastDevice;
 import com.google.cast.MediaRouteAdapter;
 import com.google.cast.MediaRouteHelper;
 import com.google.cast.MediaRouteStateChangeListener;
+import com.google.cast.SessionError;
+
+import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -131,6 +138,38 @@ public class MainActivity extends ActionBarActivity {
                                       MediaRouteStateChangeListener mediaRouteStateChangeListener) {
             mSelectedDevice = castDevice;
             mRouteStateListener = mediaRouteStateChangeListener;
+            openSession();
+
+        }
+
+        private void openSession() {
+            ApplicationSession session = new ApplicationSession(mCastContext, mSelectedDevice);
+            ApplicationSession.Listener listener = new ApplicationSession.Listener() {
+                @Override public void onSessionStarted(ApplicationMetadata applicationMetadata) {
+                    ToastHelper.showLongToast(getActivity(), "onSessionStarted");
+                }
+
+                @Override public void onSessionStartFailed(SessionError sessionError) {
+                    ToastHelper.showLongToast(getActivity(), sessionError.toString());
+                }
+
+                @Override public void onSessionEnded(SessionError sessionError) {
+                    if (sessionError == null) {
+                        // The session ended normally.
+                        ToastHelper.showLongToast(getActivity(), "onSessionEnded normally");
+                    } else {
+                        // The session ended due to an error.
+                        ToastHelper.showLongToast(getActivity(), sessionError.toString());
+                    }
+                }
+            };
+
+            session.setListener(listener);
+            try {
+                session.startSession();
+            } catch (IOException e) {
+                ToastHelper.showLongToast(getActivity(), e.getMessage());
+            }
         }
 
         @Override public void onSetVolume(double volume) {
@@ -139,6 +178,12 @@ public class MainActivity extends ActionBarActivity {
 
         @Override public void onUpdateVolume(double volume) {
 
+        }
+    }
+
+    public static class ToastHelper {
+        public static void showLongToast(Context context, String message) {
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
         }
     }
 
