@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.cast.ApplicationChannel;
@@ -96,13 +95,6 @@ public class MainActivity extends ActionBarActivity {
         @Override public void onViewCreated(View view, Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             Activity activity = getActivity();
-            Button sendBtn = (Button) activity.findViewById(R.id.btn_send);
-            sendBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
 
             mMetaData = new ContentMetadata();
             mMetaData.setTitle(CONTENT_TITLE);
