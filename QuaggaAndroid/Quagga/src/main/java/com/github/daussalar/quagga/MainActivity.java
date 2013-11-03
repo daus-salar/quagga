@@ -16,10 +16,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.cast.ApplicationChannel;
 import com.google.cast.ApplicationMetadata;
 import com.google.cast.ApplicationSession;
 import com.google.cast.CastContext;
 import com.google.cast.CastDevice;
+import com.google.cast.ContentMetadata;
+import com.google.cast.MediaProtocolCommand;
+import com.google.cast.MediaProtocolMessageStream;
 import com.google.cast.MediaRouteAdapter;
 import com.google.cast.MediaRouteHelper;
 import com.google.cast.MediaRouteStateChangeListener;
@@ -28,6 +32,10 @@ import com.google.cast.SessionError;
 import java.io.IOException;
 
 public class MainActivity extends ActionBarActivity {
+
+    private static final String APPLICATION_NAME = "";
+    private static final String CONTENT_URL = "";
+    private static final String CONTENT_TITLE = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,8 @@ public class MainActivity extends ActionBarActivity {
         private MyMediaRouterCallback mMediaRouterCallback;
         private CastDevice mSelectedDevice;
         private MediaRouteStateChangeListener mRouteStateListener;
+        private MediaProtocolMessageStream mMessageStream;
+        private ContentMetadata mMetaData;
 
         public PlaceholderFragment() {
         }
@@ -93,6 +103,9 @@ public class MainActivity extends ActionBarActivity {
 
                 }
             });
+
+            mMetaData = new ContentMetadata();
+            mMetaData.setTitle(CONTENT_TITLE);
 
             mMediaRouteButton = (MediaRouteButton) activity.findViewById(R.id.media_route_button);
             mCastContext = new CastContext(activity.getApplicationContext());
@@ -143,10 +156,21 @@ public class MainActivity extends ActionBarActivity {
         }
 
         private void openSession() {
-            ApplicationSession session = new ApplicationSession(mCastContext, mSelectedDevice);
+            final ApplicationSession session = new ApplicationSession(mCastContext, mSelectedDevice);
             ApplicationSession.Listener listener = new ApplicationSession.Listener() {
                 @Override public void onSessionStarted(ApplicationMetadata applicationMetadata) {
                     ToastHelper.showLongToast(getActivity(), "onSessionStarted");
+
+                    ApplicationChannel channel = session.getChannel();
+                    if (channel == null) {
+                        ToastHelper.showLongToast(getActivity(), "Channel is null");
+                        return;
+                    }
+                    mMessageStream = new MediaProtocolMessageStream();
+                    channel.attachMessageStream(mMessageStream);
+                    if (mMessageStream.getPlayerState() == null) {
+                        loadMedia();
+                    }
                 }
 
                 @Override public void onSessionStartFailed(SessionError sessionError) {
@@ -166,10 +190,12 @@ public class MainActivity extends ActionBarActivity {
 
             session.setListener(listener);
             try {
-                session.startSession();
+                session.startSession(APPLICATION_NAME);
             } catch (IOException e) {
                 ToastHelper.showLongToast(getActivity(), e.getMessage());
             }
+
+
         }
 
         @Override public void onSetVolume(double volume) {
@@ -179,6 +205,24 @@ public class MainActivity extends ActionBarActivity {
         @Override public void onUpdateVolume(double volume) {
 
         }
+
+        private void loadMedia() {
+            try {
+                MediaProtocolCommand command = mMessageStream.loadMedia(CONTENT_URL, mMetaData);
+                command.setListener(new MediaProtocolCommand.Listener() {
+                    @Override public void onCompleted(MediaProtocolCommand mediaProtocolCommand) {
+                        ToastHelper.showLongToast(getActivity(), "onCompleted");
+                    }
+
+                    @Override public void onCancelled(MediaProtocolCommand mediaProtocolCommand) {
+                        ToastHelper.showLongToast(getActivity(), "onCancelled");
+                    }
+                });
+            } catch (IOException e) {
+                ToastHelper.showLongToast(getActivity(), e.getMessage());
+            }
+        }
+
     }
 
     public static class ToastHelper {
