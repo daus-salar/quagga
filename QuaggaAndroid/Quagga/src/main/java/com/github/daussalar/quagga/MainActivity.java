@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.os.Build;
 import android.widget.Button;
 
+import com.google.cast.CastContext;
+
 public class MainActivity extends ActionBarActivity {
 
     @Override
