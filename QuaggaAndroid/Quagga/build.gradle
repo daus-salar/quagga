@@ -26,5 +26,5 @@ dependencies {
 	compile 'com.android.support:appcompat-v7:+'
     compile 'com.android.support:mediarouter-v7:+'
     compile 'com.android.support:support-v4:+'
-    compile files('libs/GoogleCastSdkAndroid/libs/GoogleCastSdkAndroid.jar')
+    compile files('../libs/GoogleCastSdkAndroid/libs/GoogleCastSdkAndroid.jar')
 }
