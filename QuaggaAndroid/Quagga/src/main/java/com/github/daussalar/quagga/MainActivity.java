@@ -83,6 +83,7 @@ public class MainActivity extends ActionBarActivity {
         private MediaRouteStateChangeListener mRouteStateListener;
         private MediaProtocolMessageStream mMessageStream;
         private ContentMetadata mMetaData;
+        private ApplicationSession mSession;
 
         public PlaceholderFragment() {
         }
@@ -133,6 +134,20 @@ public class MainActivity extends ActionBarActivity {
             public void onRouteUnselected(MediaRouter router, MediaRouter.RouteInfo route) {
                 mSelectedDevice = null;
                 mRouteStateListener = null;
+                closeSession();
+            }
+        }
+
+        private void closeSession() {
+            if (mSession != null && mSession.hasStarted()) {
+                try {
+                    mSession.endSession();
+                    ToastHelper.showLongToast(getActivity(), "Success ending session.");
+                } catch (IOException e) {
+                    ToastHelper.showLongToast(getActivity(), "Failed ending session.");
+                } finally {
+                    mSession = null;
+                }
             }
         }
 
@@ -148,12 +163,12 @@ public class MainActivity extends ActionBarActivity {
         }
 
         private void openSession() {
-            final ApplicationSession session = new ApplicationSession(mCastContext, mSelectedDevice);
+            mSession = new ApplicationSession(mCastContext, mSelectedDevice);
             ApplicationSession.Listener listener = new ApplicationSession.Listener() {
                 @Override public void onSessionStarted(ApplicationMetadata applicationMetadata) {
                     ToastHelper.showLongToast(getActivity(), "onSessionStarted");
 
-                    ApplicationChannel channel = session.getChannel();
+                    ApplicationChannel channel = mSession.getChannel();
                     if (channel == null) {
                         ToastHelper.showLongToast(getActivity(), "Channel is null");
                         return;
@@ -180,9 +195,9 @@ public class MainActivity extends ActionBarActivity {
                 }
             };
 
-            session.setListener(listener);
+            mSession.setListener(listener);
             try {
-                session.startSession(APPLICATION_NAME);
+                mSession.startSession(APPLICATION_NAME);
             } catch (IOException e) {
                 ToastHelper.showLongToast(getActivity(), e.getMessage());
             }
