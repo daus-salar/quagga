@@ -3,6 +3,15 @@ Quagga
 
 A [Google Cast][1] app built at [DevFest Berlin 2013][2] at the "Retro" Hackathon.
 
+
+Screenshot
+------------------
+The app shows white noise on the receiver ...
+
+![White noise][3]
+
+
+
 How to get it running
 ---------------------
 
@@ -36,3 +45,4 @@ within a few hours. Therefore, please do not expect any code quality or design.
 
 [1]: http://developers.google.com/cast/
 [2]: http://devfest-berlin.de/#/2013/about
+[3]: http://github.com/daus-salar/quagga/raw/master/screenshot.png
