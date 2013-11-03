@@ -13,8 +13,9 @@
     <android.support.v7.app.MediaRouteButton
         android:id="@+id/media_route_button"
         android:mediaRouteTypes="user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:background="#ff33b5e5"
+        android:layout_width="@dimen/media_route_button"
+        android:layout_height="@dimen/media_route_button"
         android:visibility="visible" />
 
 
