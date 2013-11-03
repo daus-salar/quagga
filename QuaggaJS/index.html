@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+    </style>
+  </head>
+<script src="https://www.gstatic.com/cast/js/receiver/1.0/cast_receiver.js">
+</script>
+<script>
+var viewbmd,
+px = [],
+timer,
+itsNoisy,
+stage,
+random = Math.random,
+xSize,
+ySize,
+nrPixel;
+
+init();
+
+function init(){
+stage = document.getElementById('myCanvas');
+xSize= document.body.clientWidth;
+ySize = document.body.clientHeight;
+nrPixel = xSize*ySize;
+viewbmd = stage.getContext("2d");
+itsNoisy = true;
+stage.onclick = manageNoise;
+initNoise();
+timer = setInterval(onTick, 50)
+}
+
+function initNoise(){
+var array = [], d, val;
+for (var i = 0; i < 255; i++) {
+array[i] = 0xffffff * (i % 2);
+}
+for(i = 0; i <nrPixel; i++){
+d = random()*256|0;
+val = array[d];
+viewbmd.fillStyle = "rgb(" + val + ", " + val + ", " + val + ")";
+viewbmd.fillRect(i%xSize, ((i)/xSize)|0, 8, 8);
+}
+px = viewbmd.getImageData(0, 0, xSize, ySize);
+}
+
+function onTick(){
+flipSomePixels(nrPixel/5);
+viewbmd.putImageData(px, 0, 0);
+}
+
+function flipSomePixels(howMany/*:int*/){
+	for (var i = 0; i < howMany; i++){
+		var pxidx = (Math.random()*(px.data.length/4))|0;
+		for(var j = 0; j < 3; j++){
+			px.data[pxidx*4+j] = !px.data[pxidx*4+j] ? 255 : 0;
+		}
+	}
+}
+
+function manageNoise(){
+	itsNoisy ? clearInterval(timer) : timer = setInterval(onTick, 50);
+	itsNoisy = !itsNoisy;
+}
+;
+</script>
+<script type="text/javascript">
+
+	var receiver = new cast.receiver.Receiver(
+	    'App ID', [cast.receiver.RemoteMedia.NAMESPACE],
+	    "",
+	    5);
+	var remoteMedia = new cast.receiver.RemoteMedia();
+	remoteMedia.addChannelFactory(
+	    receiver.createChannelFactory(cast.receiver.RemoteMedia.NAMESPACE));
+
+	receiver.start();
+
+	window.addEventListener('load', function() {
+	
+	init()
+	});
+
+</script>
+
+<body >
+	<canvas id="myCanvas" width="1064%" height="800"></canvas>
+</body>
+
+</html>
