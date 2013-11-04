@@ -11,6 +11,13 @@ The app shows white noise on the receiver ...
 ![White noise][3]
 
 
+How it works
+------------
+
+The graphic visualizes how the components communicate with each other.
+
+![Architecture][4]
+
 
 How to get it running
 ---------------------
@@ -56,3 +63,4 @@ within a few hours. Therefore, please do not expect any code quality or design.
 [1]: http://developers.google.com/cast/
 [2]: http://devfest-berlin.de/#/2013/about
 [3]: http://github.com/daus-salar/quagga/raw/master/screenshot.png
+[4]: http://github.com/daus-salar/quagga/raw/master/architecture.png
