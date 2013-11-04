@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.google.cast"
-    android:versionCode="1000006"
-    android:versionName="1.0.6" >
+          package="com.google.cast"
+          android:versionCode="1000006"
+          android:versionName="1.0.6">
     <!-- versionCode is <Major> * 1000000 + <Minor> * 1000 + <Revision> -->
 
     <uses-sdk

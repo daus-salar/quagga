@@ -2,7 +2,9 @@
 <resources>
     <!-- Error message from Cast MediaRouteProvider that indicates that the provider was not
          able to connect to the selected Cast device. [CHAR LIMIT=NONE] -->
-    <string name="error_start_session_failed">Unable to start a session with the Chromecast device.</string>
+    <string name="error_start_session_failed">Unable to start a session with the Chromecast
+        device.
+    </string>
     <!-- Error message from Cast MediaRouteProvider that indicates that the provider has lost
          its connection to the selected Cast device. [CHAR LIMIT=NONE] -->
     <string name="error_session_ended">Lost connectivity with the Chromecast device.</string>
