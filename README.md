@@ -16,8 +16,17 @@ How to get it running
 ---------------------
 
 1. Both, the sender and the receiver must be on the same network (reachable via *ping*).
-2. The sender app must be white-listed on the receiver (see below).
-3. The *protocol* of the receiver must match the *namespace* configured on the sender.
+2. The content (white noise) is served by a web server - you need to start it (see below).
+3. The sender app must be white-listed on the receiver (see below).
+4. The *protocol* of the receiver must match the *namespace* configured on the sender.
+
+
+How to serve the content
+------------------------
+Open a terminal and change to the `QuaggaJS` directory. There you have to start a web server to serve the content.
+
+    $ cd QuaggaJS
+    $ python -m SimpleHTTPServer
 
 
 How to white-list the sender
@@ -31,7 +40,8 @@ Send the content of `whitelist.json` via curl to the sender:
         "protocols":["ramp"]
     }
 
-This will register the app on the receiver.
+The `appUrl` must match the ip address and port of the webserver serving the content.
+The following command will register the app on the receiver.
 
     $ curl -vX POST http://192.168.43.172:8008/registerApp -d @whitelist.json -H "Content-Type: application/json"
 
