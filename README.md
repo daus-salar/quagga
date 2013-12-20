@@ -32,8 +32,10 @@ How to serve the content
 ------------------------
 Open a terminal and change to the `QuaggaJS` directory. There you have to start a web server to serve the content.
 
-    $ cd QuaggaJS
-    $ python -m SimpleHTTPServer
+```sh
+$ cd QuaggaJS
+$ python -m SimpleHTTPServer
+```
 
 
 How to white-list the sender
@@ -41,16 +43,20 @@ How to white-list the sender
 
 Send the content of `whitelist.json` via curl to the sender:
 
-    {
-        "appName":"WhiteNoise",
-        "appUrl":"http://192.168.43.183:8000",
-        "protocols":["ramp"]
-    }
+```json
+{
+    "appName" : "WhiteNoise",
+    "appUrl" : "http://192.168.43.183:8000",
+    "protocols" : ["ramp"]
+}
+```
 
 The `appUrl` must match the ip address and port of the webserver serving the content.
 The following command will register the app on the receiver.
 
-    $ curl -vX POST http://192.168.43.172:8008/registerApp -d @whitelist.json -H "Content-Type: application/json"
+```sh
+$ curl -vX POST http://192.168.43.172:8008/registerApp -d @whitelist.json -H "Content-Type: application/json"
+```
 
 
 Disclaimer
